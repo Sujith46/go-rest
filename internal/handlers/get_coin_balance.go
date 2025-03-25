@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/Sujith46/goapi/api"
+	"github.com/Sujith46/goapi/internal/tools"
 	"github.com/gorilla/schema"
 	log "github.com/sirupsen/logrus"
 )
@@ -21,6 +22,13 @@ func GetCoinBalance(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	var tokenDetails *tools.CoinDetails
+	tokenDetails = (*database).GetUSerCoins(params.Username)
+	if tokenDetails == nil {
+		log.Error(err)
+		api.InternalErrorHandler(w)
+		return
+	}
 	var response = api.CoinBalanceResponse{
 		Balance: (*tokenDetails).Coin,
 	}
